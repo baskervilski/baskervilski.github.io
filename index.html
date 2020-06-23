@@ -1,1 +1,26 @@
 <body>Hello, world!</body>
+
+BEWARE OF THIS OBSCURE pandas "FEATURE"
+
+
+Maybe you have heard that you should encode the categorical features in your pandas.DataFrame using .astype('category'), 
+which has multiple performance advantages: (usually) faster grouping & aggregation, (usually) much faster value counting, etc.
+
+
+Usually.
+
+Problem 1: You want group and aggregate your DataFrame using 2+ columns.
+
+Suddenly, you notice your aggregation running for ages. You compare it to aggregation 
+
+.groupby(['cat_col1', 'cat_col2', observed=True)
+
+
+d = pd.DataFrame({
+    'c1': [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4],
+    'c2': ['a', 'a', 'a', 'b', 'b', 'b', 'c', 'c', 'c', 'd', 'd', 'd']
+})
+
+d['c2'] = d['c2'].astype('category')
+
+d.head(6).groupby('c2')['c1'].mean()
